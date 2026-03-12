@@ -21,3 +21,9 @@ variable "owner" {
   type        = string
   default     = "${{ values.owner }}"
 }
+
+# GCP Authentication Variables
+variable "gcp_project_id" {
+  description = "GCP Project ID"
+  type        = string
+}
