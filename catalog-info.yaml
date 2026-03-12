@@ -1,0 +1,81 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-namespace
+  title: Create Kubernetes Namespace
+  description: Create a new namespace in GCP Kubernetes cluster
+  tags:
+    - kubernetes
+    - namespace
+    - infrastructure
+spec:
+  owner: platform-team
+  type: infrastructure
+
+  parameters:
+    - title: Namespace Configuration
+      required:
+        - namespace
+        - region
+        - cluster
+        - owner
+      properties:
+        namespace:
+          title: Namespace Name
+          type: string
+          description: Name of the Kubernetes namespace (lowercase, alphanumeric, hyphens)
+          pattern: '^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'
+
+        region:
+          title: GCP Region
+          type: string
+          enum:
+            - us-central1
+            - us-east1
+            - us-west1
+            - europe-west1
+          default: us-central1
+
+        cluster:
+          title: Kubernetes Cluster
+          type: string
+          description: Target GKE cluster name
+
+        owner:
+          title: Owner
+          type: string
+          description: Owner username/email
+
+  steps:
+    - id: fetch-base
+      name: Fetch Base Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          namespace: ${{ parameters.namespace }}
+          region: ${{ parameters.region }}
+          cluster: ${{ parameters.cluster }}
+          owner: ${{ parameters.owner }}
+
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?owner=yourorg&repo=infrastructure
+        branchName: namespace/${{ parameters.namespace }}
+        title: 'Create namespace: ${{ parameters.namespace }}'
+        description: |
+          ## Namespace Configuration
+
+          - **Namespace**: ${{ parameters.namespace }}
+          - **Region**: ${{ parameters.region }}
+          - **Cluster**: ${{ parameters.cluster }}
+          - **Owner**: ${{ parameters.owner }}
+
+          This PR creates the necessary Terraform configuration for the namespace.
+
+  output:
+    links:
+      - title: View Pull Request
+        url: ${{ steps.publish.output.remoteUrl }}
