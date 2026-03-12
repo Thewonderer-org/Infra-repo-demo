@@ -62,7 +62,7 @@ spec:
       name: Publish to GitHub
       action: publish:github:pull-request
       input:
-        repoUrl: github.com?owner=yourorg&repo=infrastructure
+        repoUrl: github.com?owner=Thewonderer-org&repo=Infra-repo-demo
         branchName: namespace/${{ parameters.namespace }}
         title: 'Create namespace: ${{ parameters.namespace }}'
         description: |
