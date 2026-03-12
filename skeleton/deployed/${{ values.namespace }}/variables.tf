@@ -1,23 +1,23 @@
-variable "namespace" {
-  description = "Namespace name"
+variable "project" {
+  description = "Project name"
   type        = string
-  default     = "${{ values.namespace }}"
+  default     = "${{ values.project }}"
 }
 
-variable "region" {
-  description = "GCP region"
+variable "portfolio" {
+  description = "Portfolio name"
   type        = string
-  default     = "${{ values.region }}"
+  default     = "${{ values.portfolio }}"
 }
 
-variable "cluster" {
-  description = "Kubernetes cluster name"
+variable "environment" {
+  description = "Environment"
   type        = string
-  default     = "${{ values.cluster }}"
+  default     = "${{ values.environment }}"
 }
 
 variable "owner" {
-  description = "Owner of the namespace"
+  description = "Owner"
   type        = string
   default     = "${{ values.owner }}"
 }

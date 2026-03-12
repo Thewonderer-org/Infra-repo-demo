@@ -1,66 +1,39 @@
-# Harness IDP Template - Namespace Provisioning
+# Infrastructure Repository
 
-This is the template repository for creating Kubernetes namespaces via Harness IDP.
+This repo contains:
+- Infrastructure code organized by portfolio and environment
+- Template files in `skeleton/` for creating new projects
 
-## What This Template Does
-
-When a developer uses this template in Harness IDP:
-1. They fill out a simple form (namespace, region, cluster, owner)
-2. This template generates Terraform configuration
-3. A PR is created in your infrastructure repo
-4. After merge, the namespace is deployed
-
-## Template Structure
+## Structure
 
 ```
-template-repo/
-├── catalog-info.yaml          # IDP workflow definition
-└── skeleton/                  # Template files
-    └── deployed/
-        └── ${{ values.namespace }}/
-            ├── main.tf        # Terraform config
-            ├── variables.tf   # Variables
-            ├── terraform.tfvars  # Values
-            └── README.md      # Documentation
+Infra-repo-demo/
+├── skeleton/                          # Templates (used by pipeline)
+│   └── deployed/
+│       └── ${{ values.namespace }}/
+│           ├── main.tf
+│           ├── variables.tf
+│           └── README.md
+│
+├── checkout-env/                      # Checkout portfolio
+│   ├── checkout-dev/
+│   │   └── p-checkout-compute/        # Created by pipeline
+│   └── checkout-prod/
+│
+└── payments-env/                      # Payments portfolio
+    ├── payments-dev/
+    └── payments-prod/
 ```
 
-## Setup in Harness IDP
+## How It Works
 
-1. **Create this repo on GitHub**
-   ```bash
-   # Upload these files to: github.com/yourorg/namespace-template
-   ```
+1. Developer fills form in Harness IDP
+2. IDP triggers pipeline with parameters
+3. Pipeline copies `skeleton/` → `{portfolio}-env/{portfolio}-{env}/p-{portfolio}-{project}/`
+4. Pipeline replaces `${{ values.* }}` with actual values
+5. Pipeline creates PR
+6. After merge, pipeline deploys namespace
 
-2. **Register in Harness IDP**
-   - Go to IDP → Create → Register Software Template
-   - Enter URL: `https://github.com/yourorg/namespace-template/blob/main/catalog-info.yaml`
+## Created By
 
-3. **Configure target repo**
-   - Edit `catalog-info.yaml` line 58
-   - Change `yourorg/infrastructure` to your actual infrastructure repo
-
-4. **Test it**
-   - Go to IDP → Create → "Create Kubernetes Namespace"
-   - Fill the form
-   - Submit
-
-## What Gets Generated
-
-For a namespace called `my-app`:
-
-```
-infrastructure-repo/
-└── deployed/
-    └── my-app/
-        ├── main.tf           # Creates namespace + quota
-        ├── variables.tf      # Variable definitions
-        ├── terraform.tfvars  # Actual values
-        └── README.md         # Documentation
-```
-
-## Next Steps
-
-After the template is working:
-- Add pipeline to auto-deploy on PR merge
-- Add validation steps
-- Add more resources (secrets, configmaps, etc.)
+Harness IDP Pipeline-driven workflow

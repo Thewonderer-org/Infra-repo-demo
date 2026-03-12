@@ -1,21 +1,25 @@
-# Namespace: ${{ values.namespace }}
+# Project: p-${{ values.portfolio }}-${{ values.project }}
 
 ## Configuration
 
-- **Region**: ${{ values.region }}
-- **Cluster**: ${{ values.cluster }}
+- **Portfolio**: ${{ values.portfolio }}
+- **Environment**: ${{ values.environment }}
 - **Owner**: ${{ values.owner }}
 
-## Deployment
+## Namespace
 
-This namespace was created via Harness IDP.
+Creates namespace: `p-${{ values.portfolio }}-${{ values.project }}-${{ values.environment }}`
 
-### Resources
+## Location
 
-- Namespace with labels
+`${{ values.portfolio }}-env/${{ values.portfolio }}-${{ values.environment }}/p-${{ values.portfolio }}-${{ values.project }}/`
+
+## Resources
+
+- Kubernetes namespace with labels
 - Resource quota (10 CPU, 20Gi memory, 50 pods)
 
-### To Deploy
+## Deployment
 
 ```bash
 terraform init

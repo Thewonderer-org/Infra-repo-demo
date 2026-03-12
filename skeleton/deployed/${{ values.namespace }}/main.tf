@@ -16,13 +16,14 @@ provider "kubernetes" {
 # Create namespace
 resource "kubernetes_namespace" "this" {
   metadata {
-    name = var.namespace
+    name = "p-${{ values.portfolio }}-${{ values.project }}-${{ values.environment }}"
 
     labels = {
-      "region"     = var.region
-      "cluster"    = var.cluster
-      "owner"      = var.owner
-      "managed-by" = "terraform"
+      "portfolio"   = "${{ values.portfolio }}"
+      "project"     = "${{ values.project }}"
+      "environment" = "${{ values.environment }}"
+      "owner"       = "${{ values.owner }}"
+      "managed-by"  = "terraform"
     }
   }
 }
@@ -30,7 +31,7 @@ resource "kubernetes_namespace" "this" {
 # Add resource quota
 resource "kubernetes_resource_quota" "this" {
   metadata {
-    name      = "${{ values.namespace }}-quota"
+    name      = "p-${{ values.portfolio }}-${{ values.project }}-quota"
     namespace = kubernetes_namespace.this.metadata[0].name
   }
 
