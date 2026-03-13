@@ -1,23 +1,20 @@
-# Project: p-${{ values.portfolio }}-${{ values.project }}
+# GCP Project: ${{ values.project_id }}
 
 ## Configuration
 
+- **Project ID**: ${{ values.project_id }}
 - **Portfolio**: ${{ values.portfolio }}
 - **Environment**: ${{ values.environment }}
 - **Owner**: ${{ values.owner }}
 
-## Namespace
-
-Creates namespace: `p-${{ values.portfolio }}-${{ values.project }}-${{ values.environment }}`
-
 ## Location
 
-`${{ values.portfolio }}-env/${{ values.portfolio }}-${{ values.environment }}/p-${{ values.portfolio }}-${{ values.project }}/`
+`${{ values.portfolio }}-env/${{ values.portfolio }}-${{ values.environment }}/${{ values.project_id }}/`
 
 ## Resources
 
-- Kubernetes namespace with labels
-- Resource quota (10 CPU, 20Gi memory, 50 pods)
+- GCP Project with organizational labels
+- Project managed under organization
 
 ## Deployment
 

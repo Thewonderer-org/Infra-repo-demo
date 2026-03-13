@@ -1,7 +1,7 @@
-variable "project" {
-  description = "Project name"
+variable "project_id" {
+  description = "GCP Project ID to create"
   type        = string
-  default     = "${{ values.project }}"
+  default     = "${{ values.project_id }}"
 }
 
 variable "portfolio" {
@@ -22,8 +22,7 @@ variable "owner" {
   default     = "${{ values.owner }}"
 }
 
-# GCP Authentication Variables
-variable "gcp_project_id" {
-  description = "GCP Project ID"
+variable "organization_id" {
+  description = "GCP Organization ID"
   type        = string
 }
