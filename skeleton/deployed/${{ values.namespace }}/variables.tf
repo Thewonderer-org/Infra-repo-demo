@@ -16,6 +16,12 @@ variable "environment" {
   default     = "${{ values.environment }}"
 }
 
+variable "global_cell" {
+  description = "Global cell name"
+  type        = string
+  default     = "${{ values.global_cell }}"
+}
+
 variable "owner" {
   description = "Owner"
   type        = string

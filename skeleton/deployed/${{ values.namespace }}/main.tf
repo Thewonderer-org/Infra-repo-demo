@@ -17,14 +17,39 @@ terraform {
 # Configure Google provider
 provider "google" {}
 
-# Create GCP Project
+# Construct the cell folder name
+locals {
+  cell_folder_name = "${{ values.portfolio }}-${{ values.environment }}-${{ values.global_cell }}"
+}
+
+# Look up the cell folder ID by display name using gcloud
+data "external" "cell_folder" {
+  program = ["bash", "-c", <<-EOT
+    FOLDER_NAME="${local.cell_folder_name}"
+    ORG_ID="$${1}"
+
+    # Search for folder by display name
+    FOLDER_ID=$(gcloud resource-manager folders list --organization=$${ORG_ID} --format="value(name)" --filter="displayName:$${FOLDER_NAME}")
+
+    if [ -z "$${FOLDER_ID}" ]; then
+      echo "Error: Folder '$${FOLDER_NAME}' not found in organization $${ORG_ID}" >&2
+      exit 1
+    fi
+
+    echo "{\"folder_id\": \"$${FOLDER_ID}\"}"
+  EOT
+  , var.organization_id]
+}
+
+# Create GCP Project in the cell folder
 resource "google_project" "project" {
   name            = "${{ values.project_id }}"
   project_id      = "${{ values.project_id }}"
-  org_id          = var.organization_id
+  folder_id       = data.external.cell_folder.result.folder_id
   labels = {
     portfolio   = "${{ values.portfolio }}"
     environment = "${{ values.environment }}"
+    global-cell = "${{ values.global_cell }}"
     owner       = replace("${{ values.owner }}", ".", "-")
     managed-by  = "terraform"
   }
