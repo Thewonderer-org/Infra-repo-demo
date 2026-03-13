@@ -28,7 +28,7 @@ variable "owner" {
   default     = "${{ values.owner }}"
 }
 
-variable "organization_id" {
-  description = "GCP Organization ID"
+variable "cell_folder_id" {
+  description = "GCP Folder ID for the cell (e.g., folders/123456789)"
   type        = string
 }
