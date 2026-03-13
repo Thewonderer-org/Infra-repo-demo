@@ -9,7 +9,7 @@
 
 ## Location
 
-`${{ values.portfolio }}-env/${{ values.portfolio }}-${{ values.environment }}/${{ values.project_id }}/`
+`${{ values.portfolio }}/${{ values.portfolio }}-${{ values.environment }}/${{ values.portfolio }}-${{ values.environment }}-${{ values.global_cell }}/${{ values.project_id }}/`
 
 ## Resources
 
