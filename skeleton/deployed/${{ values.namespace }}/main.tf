@@ -17,17 +17,25 @@ terraform {
 # Configure Google provider
 provider "google" {}
 
+# Sanitize owner for GCP label requirements
+locals {
+  # Convert to lowercase, replace non-alphanumeric with hyphens, remove consecutive hyphens
+  owner_sanitized = lower(replace(replace(replace("${{ values.owner }}", "/[^a-zA-Z0-9]/", "-"), "/--+/", "-"), "/^-+|-+$/", ""))
+  # Ensure it starts with a letter (prepend 'u' if it doesn't)
+  owner_label = can(regex("^[a-z]", local.owner_sanitized)) ? local.owner_sanitized : "u-${local.owner_sanitized}"
+}
+
 # Create GCP Project in the cell folder
 resource "google_project" "project" {
   name            = "${{ values.project_id }}"
   project_id      = "${{ values.project_id }}"
   folder_id       = var.cell_folder_id
   labels = {
-    portfolio   = "${{ values.portfolio }}"
-    environment = "${{ values.environment }}"
-    global-cell = "${{ values.global_cell }}"
-    owner       = replace("${{ values.owner }}", ".", "-")
-    managed-by  = "terraform"
+    portfolio    = "${{ values.portfolio }}"
+    environment  = "${{ values.environment }}"
+    global_cell  = replace("${{ values.global_cell }}", "-", "_")
+    owner        = local.owner_label
+    managed_by   = "terraform"
   }
 }
 
