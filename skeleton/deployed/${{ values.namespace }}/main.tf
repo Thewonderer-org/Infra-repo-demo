@@ -10,7 +10,7 @@ terraform {
 
   backend "gcs" {
     bucket = "harness-cell-factory-tfstate"
-    prefix = "gcp-projects"
+    prefix = "gcp-projects/${{ values.project_id }}"
   }
 }
 
